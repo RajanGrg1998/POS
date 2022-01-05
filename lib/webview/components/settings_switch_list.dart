@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pos/screens/loyality.dart';
-import 'package:pos/screens/payment_large.dart';
-import 'package:pos/screens/tax.dart';
+import 'package:pos/screen/loyality.dart';
+import 'package:pos/screen/payment_large.dart';
+import 'package:pos/screen/tax.dart';
+
 import 'package:pos/webview/settings_componets/dining_page.dart';
 import 'package:pos/webview/settings_componets/features_page.dart';
 import 'package:pos/webview/settings_componets/receipt_page.dart';

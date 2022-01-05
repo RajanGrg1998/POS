@@ -26,8 +26,8 @@ class HeaderContainer extends StatelessWidget {
             title,
             style: TextStyle(
               color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Row(

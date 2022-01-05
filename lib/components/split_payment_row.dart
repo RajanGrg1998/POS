@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/primary_button.dart';
-import 'package:pos/utilities/constant.dart';
+import 'package:pos/utils/constant.dart';
 
 class SplitPaymentInputRow extends StatefulWidget {
   @override

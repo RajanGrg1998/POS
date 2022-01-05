@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pos/utilities/constant.dart';
+import 'package:pos/utils/constant.dart';
 
 class SidebarPayment extends StatelessWidget {
   const SidebarPayment({

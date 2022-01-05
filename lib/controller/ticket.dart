@@ -1,10 +1,11 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:pos/model/items_ordered_mode.dart';
+import 'package:pos/model/items_ordered_model.dart';
 import 'package:pos/model/open_ticket_model.dart';
 
 class TicketProvider extends ChangeNotifier {
-  //open ticket list
+//globalkey for animated list
+  final GlobalKey<AnimatedListState> openTicketKey = GlobalKey();
 
   final List<OpenTicketModel> _openTicketList = [
     OpenTicketModel(
@@ -56,9 +57,26 @@ class TicketProvider extends ChangeNotifier {
 //using get to access private open list
   UnmodifiableListView<OpenTicketModel> get openTicketList =>
       UnmodifiableListView(_openTicketList);
-
-  void dismisDelete(OpenTicketModel openTicketModel) {
+//delete ticket
+  void dismisDelete(OpenTicketModel openTicketModel, index, Widget widget) {
     _openTicketList.remove(openTicketModel);
+
+    openTicketKey.currentState!.removeItem(
+      index,
+      (context, animation) {
+        return FadeTransition(
+          opacity: CurvedAnimation(
+              parent: animation, curve: const Interval(0.5, 1.0)),
+          child: SizeTransition(
+            sizeFactor: CurvedAnimation(
+                parent: animation, curve: const Interval(0.0, 1.0)),
+            axisAlignment: 0.0,
+            child: widget,
+          ),
+        );
+      },
+      duration: const Duration(milliseconds: 600),
+    );
     print('deleted');
     notifyListeners();
   }
@@ -180,9 +198,16 @@ class TicketProvider extends ChangeNotifier {
       itemRate: 500,
     ),
   ];
+  ItemsOrdered? toEditOrder;
 
   UnmodifiableListView<ItemsOrdered> get itemsOrdered =>
       UnmodifiableListView(_itemsOrdered);
+
+  void editCustomer(ItemsOrdered itemsOrdered) {
+    int index = _itemsOrdered.indexOf(itemsOrdered);
+    _itemsOrdered[index] = itemsOrdered;
+    notifyListeners();
+  }
 
 //for selected items to be refunded
   final List<ItemsOrdered> itemsRefund = [];

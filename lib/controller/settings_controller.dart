@@ -2,14 +2,14 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:pos/model/diningModel.dart';
-import 'package:pos/screens/dining.dart';
-import 'package:pos/screens/features.dart';
-import 'package:pos/screens/loayalityscreen/mobile_loyality_screen.dart';
-import 'package:pos/screens/payment.dart';
-import 'package:pos/screens/posdevice.dart';
-import 'package:pos/screens/stores.dart';
-import 'package:pos/screens/receipt.dart';
-import 'package:pos/screens/taxloyalityscreen/mobile_tax_screen.dart';
+import 'package:pos/screen/dining.dart';
+import 'package:pos/screen/features.dart';
+import 'package:pos/screen/loayalityscreen/mobile_loyality_screen.dart';
+import 'package:pos/screen/payment.dart';
+import 'package:pos/screen/posdevice.dart';
+import 'package:pos/screen/reciept/reciept_screen.dart';
+import 'package:pos/screen/stores.dart';
+import 'package:pos/screen/taxloyalityscreen/mobile_tax_screen.dart';
 
 class SettingController extends ChangeNotifier {
   //-------to change homepage layout-------------//
@@ -71,7 +71,7 @@ class SettingController extends ChangeNotifier {
     },
     {
       "title": "Receipt",
-      "route": ReceiptScreen(),
+      "route": RecieptScreen(),
     },
     {
       "title": "Dining Option",

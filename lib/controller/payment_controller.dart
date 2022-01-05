@@ -1,7 +1,5 @@
 import 'dart:collection';
 import 'package:flutter/cupertino.dart';
-import 'package:pos/components/addtextfield.dart';
-import 'package:pos/components/splitpersoncontainer.dart';
 import 'package:pos/model/paymentModel.dart';
 
 class PaymentNotifier extends ChangeNotifier {
@@ -27,36 +25,36 @@ class PaymentNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Widget> splitWidget = [
-    SplitPersonContainer(
-      number: 0,
-      textField: AddTextField(
-        hintText: '110.00',
-      ),
-      onChanged: () {},
-      onPressed: () {},
-    )
-  ];
+  // List<Widget> splitWidget = [
+  //   SplitPersonContainer(
+  //     number: 0,
+  //     textField: AddTextField(
+  //       hintText: '110.00',
+  //     ),
+  //     onChanged: () {},
+  //     onPressed: () {},
+  //   )
+  // ];
 
-  addSplitWidget(Widget widget) {
-    splitWidget.add(widget);
-    notifyListeners();
-  }
+  // addSplitWidget(Widget widget) {
+  //   splitWidget.add(widget);
+  //   notifyListeners();
+  // }
 
-  removeSplitWidget() {
-    if (splitWidget.length > 0) {
-      splitWidget.removeLast();
-      notifyListeners();
-    }
-    notifyListeners();
-  }
+  // removeSplitWidget() {
+  //   if (splitWidget.length > 0) {
+  //     splitWidget.removeLast();
+  //     notifyListeners();
+  //   }
+  //   notifyListeners();
+  // }
 
-  count() {
-    splitWidget.length;
-  }
+  // count() {
+  //   splitWidget.length;
+  // }
 }
 
-class Splitwidget {
-  Widget widget;
-  Splitwidget({required this.widget});
-}
+// class Splitwidget {
+//   Widget widget;
+//   Splitwidget({required this.widget});
+// }

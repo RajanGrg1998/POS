@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CreditorController extends ChangeNotifier {
+  final _formKey = GlobalKey<FormState>();
+
+  GlobalKey<FormState> get formKey => _formKey;
+
   final nameController = TextEditingController();
 
   final phoneController = TextEditingController();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pos/utilities/constant.dart';
+import 'package:pos/utils/constant.dart';
 
 class TabletViewAppbar extends StatelessWidget {
   final Widget trailing;
