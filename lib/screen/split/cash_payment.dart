@@ -11,7 +11,7 @@ class CashPayment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _pay = Provider.of<SplitController>(context);
+    // var _pay = Provider.of<SplitController>(context);
     var _itemsCon = Provider.of<ItemsController>(context);
 
     return Scaffold(
@@ -43,7 +43,7 @@ class CashPayment extends StatelessWidget {
               )),
             ),
             onTap: () {
-              _pay.splitPayment(context);
+              _itemsCon.splitPayment(context);
             },
           ),
         ],
@@ -58,7 +58,7 @@ class CashPayment extends StatelessWidget {
                 padding: const EdgeInsets.all(7.0),
                 child: _itemsCon.ticketList.isNotEmpty
                     ? Text(
-                        _itemsCon.value.toString(),
+                        _itemsCon.total.toString(),
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class CashPayment extends StatelessWidget {
               ),
             ),
             Center(
-                child: _itemsCon.value > 0
+                child: _itemsCon.total > 0
                     ? const Text('Total Amount',
                         style: TextStyle(
                           fontSize: 16,

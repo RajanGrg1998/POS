@@ -39,8 +39,7 @@ class FeaturesBody extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
         children: [
-          SizedBox(
-            height: 550,
+          Expanded(
             child: ListView.builder(
               itemCount: _controller.featureOptionList.length,
               itemBuilder: (context, int index) {

@@ -5,7 +5,7 @@ import 'package:pos/controller/items_controller.dart';
 import 'package:pos/utils/constant.dart';
 import 'package:provider/provider.dart';
 
-import '../homepage.dart';
+import '../homepage/homepage.dart';
 
 class CompleteActionPayment extends StatelessWidget {
   const CompleteActionPayment({Key? key}) : super(key: key);
@@ -58,7 +58,7 @@ class CompleteActionPayment extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CustomColumn(
-                        rate: '${_itemsCon.value}',
+                        rate: '${_itemsCon.total}',
                         title: 'Total Amount',
                       ),
                     ),

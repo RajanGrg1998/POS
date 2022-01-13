@@ -215,6 +215,7 @@ class TicketsScreen extends StatelessWidget {
                                     groupValue: _controller.selectedItem.value,
                                     onChanged: (value) {
                                       _controller.selectedRadio(value!);
+                                      Navigator.pop(context);
                                     },
                                   ),
                                 );

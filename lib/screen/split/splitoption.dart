@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pos/controller/split_controller.dart';
+import 'package:pos/controller/items_controller.dart';
 import 'package:pos/model/split_option_model.dart';
 import 'package:pos/utils/constant.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +9,8 @@ class SplitOptionBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _pay = Provider.of<SplitController>(context);
+    // var _pay = Provider.of<SplitController>(context);
+    var _itemCon = Provider.of<ItemsController>(context);
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       color: kDefaultBackgroundColor,
@@ -31,13 +32,13 @@ class SplitOptionBody extends StatelessWidget {
                   BuildItemNumberButton(
                       iconData: Icons.remove,
                       onPress: () {
-                        _pay.decreasePerson();
+                        _itemCon.decreasePerson();
                       }),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '${_pay.selectedPerson}',
+                        '${_itemCon.selectedPerson}',
                         style: const TextStyle(
                             fontSize: 20,
                             fontFamily: 'RobotoBold',
@@ -55,7 +56,7 @@ class SplitOptionBody extends StatelessWidget {
                   BuildItemNumberButton(
                       iconData: Icons.add,
                       onPress: () {
-                        _pay.addPerson();
+                        _itemCon.addPerson();
                       }),
                 ],
               ),
@@ -64,12 +65,12 @@ class SplitOptionBody extends StatelessWidget {
           const SizedBox(height: 40.0),
           Flexible(
               child: ListView.builder(
-            itemCount: _pay.selectedPerson,
+            itemCount: _itemCon.selectedPerson,
             itemBuilder: (context, index) {
               int personCount = index + 1;
-              String selectedDropDown = _pay.selesectpayment;
-              _pay.paymentOptionController.add(selectedDropDown);
-              _pay.amountTextCon.add(TextEditingController());
+              String selectedDropDown = _itemCon.selesectpayment;
+              _itemCon.paymentOptionController.add(selectedDropDown);
+              _itemCon.amountTextCon.add(TextEditingController());
               return Padding(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: Column(
@@ -92,12 +93,12 @@ class SplitOptionBody extends StatelessWidget {
                           ),
                         ),
                         child: PaymentMethodDropdown(
-                            value: _pay.paymentOptionController[index],
+                            value: _itemCon.paymentOptionController[index],
                             valueChanged: (newValue) {
-                              _pay.paymentOptionController[index] =
+                              _itemCon.paymentOptionController[index] =
                                   newValue.toString();
                             },
-                            itemsList: _pay.paymentOption.map((valueItem) {
+                            itemsList: _itemCon.paymentOption.map((valueItem) {
                               return DropdownMenuItem(
                                 value: valueItem,
                                 child: Padding(
@@ -110,16 +111,16 @@ class SplitOptionBody extends StatelessWidget {
                     ),
                     SplitTextFormField(
                         hintText: 'Enter amount',
-                        textEditingController: _pay.amountTextCon[index]),
+                        textEditingController: _itemCon.amountTextCon[index]),
                     SizedBox(height: 10.0),
                     PayButton(
                       onPress: () {
-                        String amountValue = _pay.amountTextCon[index].text;
-                        _pay.splitPay(
+                        String amountValue = _itemCon.amountTextCon[index].text;
+                        _itemCon.splitPay(
                           context,
                           SplitOptionModel(
                             personNumber: 'Person ${personCount.toString()}',
-                            paymentMethod: _pay.selesectpayment,
+                            paymentMethod: _itemCon.selesectpayment,
                             paidAmount: amountValue.isEmpty
                                 ? 0.0
                                 : double.parse(amountValue),

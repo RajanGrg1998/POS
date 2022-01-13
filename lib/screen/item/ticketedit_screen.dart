@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/items_controller.dart';
+import 'package:pos/screen/item/editqtyscreen.dart';
 import 'package:pos/screen/split/paymentmethod.dart';
 import 'package:pos/screen/widgets/menu_items.dart';
 import 'package:pos/utils/constant.dart';
@@ -12,7 +13,7 @@ class TicketEditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var items = Provider.of<ItemsController>(context);
+    var itemsCon = Provider.of<ItemsController>(context);
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -55,8 +56,8 @@ class TicketEditScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              items.removeAll();
-              items.value = 0;
+              itemsCon.clearAllItems();
+              itemsCon.total = 0;
             },
             style: TextButton.styleFrom(
               primary: Color(0xff30B700),
@@ -75,16 +76,38 @@ class TicketEditScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 16),
-            ...List.generate(items.ticketList.length, (index) {
-              final ticket = items.ticketList[index];
-              return MenuItemText(
-                  onDelete: (context) {
-                    items.removeAtIndex(ticket);
-                  },
-                  itemName: '${ticket.item!.name}',
-                  itemQuantity: '${ticket.quantity}',
-                  itemRate: '${ticket.item!.price}');
-            }),
+            AnimatedList(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              key: itemsCon.itemKey,
+              initialItemCount: itemsCon.ticketList.length,
+              itemBuilder: (context, index, animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: _builtAddItemList(itemsCon, index, context),
+                );
+              },
+            ),
+            // ...List.generate(items.ticketList.length, (index) {
+            //   final ticket = items.ticketList[index];
+            //   return MenuItemText(
+            //       onEdit: (context) {
+            //         Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => EditQuantityScreen(
+            //                 ticektItem: ticket,
+            //                 index: index,
+            //               ),
+            //             ));
+            //       },
+            //       onDelete: (context) {
+            //         items.removeAtIndex(ticket);
+            //       },
+            //       itemName: '${ticket.item!.name}',
+            //       itemQuantity: '${ticket.quantity}',
+            //       itemRate: '${ticket.item!.price}');
+            // }),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Divider(
@@ -99,7 +122,9 @@ class TicketEditScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  items.ticketList.isEmpty ? 'Rs. 0.0' : 'Rs. ${items.value}',
+                  itemsCon.ticketList.isEmpty
+                      ? 'Rs. 0.0'
+                      : 'Rs. ${itemsCon.total}',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ],
@@ -144,6 +169,35 @@ class TicketEditScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  _builtAddItemList(ItemsController itemsCon, int index, BuildContext context) {
+    final ticket = itemsCon.ticketList[index];
+    return MenuItemText(
+      onEdit: (context) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditQuantityScreen(
+                ticektItem: ticket,
+              ),
+            ));
+      },
+      onDelete: (context) {
+        itemsCon.removeAtIndex(
+            ticket, index, _builtAddItemList(itemsCon, index, context));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: const Duration(milliseconds: 600),
+            content: Text('Ticket deleted Sucessfully'),
+            backgroundColor: kDefaultGreen,
+          ),
+        );
+      },
+      itemName: '${ticket.item!.name}',
+      itemQuantity: '${ticket.quantity}',
+      itemRate: '${ticket.item!.price}',
     );
   }
 }

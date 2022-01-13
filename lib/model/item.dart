@@ -95,4 +95,9 @@ class Item {
 
     return toReturn;
   }
+
+  @override
+  String toString() {
+    return '{isVeg:$isVeg, categories:$categories, _id:$id, name:$name, price:$price, description:$description, usesStocks:$usesStocks}';
+  }
 }

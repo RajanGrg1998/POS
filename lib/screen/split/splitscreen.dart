@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pos/controller/split_controller.dart';
+import 'package:pos/controller/items_controller.dart';
 import 'package:provider/provider.dart';
 import 'splitoption.dart';
 
@@ -8,7 +8,7 @@ class Split extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _pay = Provider.of<SplitController>(context);
+    var _itemCon = Provider.of<ItemsController>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -20,7 +20,7 @@ class Split extends StatelessWidget {
           },
         ),
         title: Text(
-          'Remaining ' + _pay.totalAmount.toString(),
+          'Remaining ' + _itemCon.total.toString(),
           style: const TextStyle(
               color: Colors.black, fontFamily: 'RobotoRegular', fontSize: 16.0),
         ),

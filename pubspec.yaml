@@ -17,11 +17,12 @@ dependencies:
   expandable_page_view: ^1.0.5
   flutter:
     sdk: flutter
+  flutter_slidable: ^1.1.0
   flutter_svg: ^0.22.0
   image_picker: ^0.8.4+4
   provider: ^5.0.0
+  readmore: ^2.1.0
   shimmer: ^2.0.0
-  flutter_slidable: ^1.1.0
 
 dev_dependencies:
   flutter_test:

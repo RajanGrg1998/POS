@@ -34,7 +34,7 @@ class PaymentMethod extends StatelessWidget {
             heightFactor: 2.5,
             child: CustomColumn(
                 rate: _itemsCon.ticketList.isNotEmpty
-                    ? 'Rs. ${Provider.of<ItemsController>(context).value}'
+                    ? 'Rs. ${Provider.of<ItemsController>(context).total}'
                     : 'Rs. 0.0',
                 title: 'Total Amount'),
           ),
