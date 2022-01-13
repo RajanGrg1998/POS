@@ -7,39 +7,17 @@ import 'package:pos/model/api_response.dart';
 import 'package:pos/model/create_item.dart';
 import 'package:pos/model/item.dart';
 import 'package:http/http.dart' as http;
+import 'package:pos/model/split_option_model.dart';
 import 'package:pos/model/update_item.dart';
 import 'package:pos/screen/split/completeaction.dart';
+import 'package:pos/screen/split/splitscreen.dart';
 import 'package:pos/utils/constant.dart';
 
-enum HomeState { normal, cart }
-
 class ItemsController extends ChangeNotifier {
-  // String _cartTag = "";
+  TextEditingController _itemQty = TextEditingController();
+  TextEditingController get itemQty => _itemQty;
 
-  // String get cartTag => _cartTag;
-
-  // set cartTag(String value) {
-  //   _cartTag = value;
-  //   notifyListeners();
-  // }
-
-  // HomeState _homeState = HomeState.normal;
-  // HomeState get homestate => _homeState;
-
-  // void changeHomeState(HomeState state) {
-  //   _homeState = state;
-  //   notifyListeners();
-  // }
-
-  // void onVerticalGesture(DragUpdateDetails details) {
-  //   if (details.primaryDelta! < -0.7) {
-  //     changeHomeState(HomeState.cart);
-  //     notifyListeners();
-  //   } else if (details.primaryDelta! > 12) {
-  //     changeHomeState(HomeState.normal);
-  //     notifyListeners();
-  //   }
-  // }
+  final GlobalKey<AnimatedListState> itemKey = GlobalKey();
 
   List<Item> sortedList = [];
   List<Item> _items = [];
@@ -49,10 +27,46 @@ class ItemsController extends ChangeNotifier {
   List<Item> get searchItems => _searchedItems;
 
   bool isItemLoaded = false;
-  void sortByCategory(category) {
+
+//filterall
+  void filterAll() {
+    sortedList = _items;
+  }
+
+//filterDiscount
+  void filterDiscount() {
     sortedList = _items
-        .where((element) => element.categories!.contains(category))
+        .where((element) =>
+            element.categories!.contains('60fd0ef43f6cf413f8b91403'))
         .toList();
+    notifyListeners();
+  }
+
+// Drinks
+  void filterDrinks() {
+    sortedList = _items
+        .where((element) =>
+            element.categories!.contains('60fd0f353f6cf413f8b91406'))
+        .toList();
+    notifyListeners();
+  }
+
+// Snacks
+  void filterSnacks() {
+    sortedList = _items
+        .where((element) =>
+            element.categories!.contains('6119e690ede7585a2f75a289'))
+        .toList();
+    notifyListeners();
+  }
+
+  // Alcohol
+  void filterAlcohol() {
+    sortedList = _items
+        .where((element) =>
+            element.categories!.contains('611893deede7585a2f75a27c'))
+        .toList();
+    notifyListeners();
   }
 
   TextEditingController _serachTextCon = new TextEditingController();
@@ -217,6 +231,7 @@ class ItemsController extends ChangeNotifier {
     }
   }
 
+//uoloadImage
   Future<void> uploadImage() async {
     var stream = http.ByteStream(image!.openRead());
     stream.cast();
@@ -241,8 +256,7 @@ class ItemsController extends ChangeNotifier {
     }
   }
 
-  //add items
-
+//add items
   List<TicektItem> _ticketList = [];
   List<TicektItem> get ticketList => _ticketList;
 
@@ -258,78 +272,129 @@ class ItemsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  double _value = 0; //total amount
+//total amount
+  double _total = 0;
+  double get total => _total;
 
-  double get value => _value;
-
-  set value(double value) {
-    _value = value;
+//setter for total amount
+  set total(double total) {
+    _total = total;
     notifyListeners();
   }
 
-  //return chnaged
-
+//returnChange
   double _returnChange = 0.0;
   double get returnChange => _returnChange;
 
-  set returnChange(double value) {
-    _returnChange = value;
+//setter from returnChange
+  set returnChange(double total) {
+    _returnChange = total;
     notifyListeners();
   }
-
-  //cash recieved
-
-  // double _cashReceived = 250.0;
-  // double get cashReceived => _cashReceived;
-
-  // set cashReceived(double value) {
-  //   _cashReceived = value;
-  //   notifyListeners();
-  // }
 
   TextEditingController _cashReceived = TextEditingController();
   TextEditingController get cashReceived => _cashReceived;
 
-  set cashReceived(TextEditingController value) {
-    _cashReceived = value;
+//setter from cashReceived
+  set cashReceived(TextEditingController cashReceived) {
+    _cashReceived = cashReceived;
     notifyListeners();
   }
 
-  void total() {
-    _value = _ticketList.fold(
+//sum of items selected
+  void sum() {
+    _total = _ticketList.fold(
         0,
-        (previousValue, current) =>
-            previousValue + (current.item!.price * current.quantity));
+        (previoustotal, current) =>
+            previoustotal + (current.item!.price * current.quantity));
     notifyListeners();
   }
 
-  void removeAtIndex(TicektItem ticektItem) {
+//increament quantity
+  void increase() {
+    int currenttotal = int.parse(_itemQty.text);
+    currenttotal++;
+    _itemQty.text = (currenttotal).toString();
+    notifyListeners();
+    print(currenttotal);
+  }
+
+//decreament quantity
+  void decrease() {
+    int currenttotal = int.parse(_itemQty.text);
+    currenttotal--;
+    _itemQty.text = (currenttotal > 0 ? currenttotal : 1).toString();
+    notifyListeners();
+  }
+
+//on quanitity save
+  onSave(TicektItem ticektItem, context) {
+    int current = int.parse(_itemQty.text);
+    if (current == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: kDefaultGreen,
+        content: Text("Quantity cannot be zero"),
+      ));
+    } else {
+      ticektItem.quantity = int.parse(_itemQty.text);
+      _total = _ticketList.fold(
+          0,
+          (previoustotal, current) =>
+              previoustotal + (ticektItem.item!.price * ticektItem.quantity));
+      Navigator.pop(context);
+    }
+
+    notifyListeners();
+  }
+
+//remove index with fade transition
+  void removeAtIndex(TicektItem ticektItem, index, Widget widget) {
     _ticketList.remove(ticektItem);
+    _total = _total - ticektItem.item!.price * ticektItem.quantity;
 
-    _value = _value - ticektItem.item!.price * ticektItem.quantity;
-
-    // This call tells the widgets that are listening to this model to rebuild.
+    itemKey.currentState!.removeItem(
+      index,
+      (context, animation) {
+        return FadeTransition(
+          opacity: CurvedAnimation(
+              parent: animation, curve: const Interval(0.5, 1.0)),
+          child: SizeTransition(
+            sizeFactor: CurvedAnimation(
+                parent: animation, curve: const Interval(0.0, 1.0)),
+            axisAlignment: 0.0,
+            child: widget,
+          ),
+        );
+      },
+      duration: const Duration(milliseconds: 600),
+    );
+    print('deleted');
     notifyListeners();
   }
 
-  void removeAll() {
-    _ticketList.clear();
-    // This call tells the widgets that are listening to this model to rebuild.
+//clear all added _ticketlist
+  void clearAllItems() {
+    for (var i = 0; i <= _ticketList.length - 1; i++) {
+      itemKey.currentState!.removeItem(0,
+          (BuildContext context, Animation<double> animation) {
+        return Container();
+      });
+    }
+    ticketList.clear();
     notifyListeners();
   }
 
-  //for cash recieved
-
+//for cash recieved
   void performTransaction(context) {
     double _cashRec = double.parse(cashReceived.text);
 
-    if (_value <= 0.0) {
+    if (_total <= 0.0) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: kDefaultGreen,
         content: Text("Payment is already completed."),
       ));
-    } else if (_cashRec >= value) {
-      _returnChange = (_cashRec - value);
+    } else if (_cashRec >= total) {
+      _returnChange = (_cashRec - total);
       notifyListeners();
 
       Navigator.of(context).push(MaterialPageRoute(
@@ -342,15 +407,105 @@ class ItemsController extends ChangeNotifier {
       ));
       ticketList.clear();
     } else {
-      returnChange = _cashRec - value;
+      returnChange = _cashRec - total;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: kDefaultGreen,
         content: Text("Insufficient amount received."),
       ));
     }
+    notifyListeners();
   }
 
-  notifyListeners();
+//selected person
+  int selectedPerson = 2;
+  List<TextEditingController> _amountTextCon = [];
+  List<TextEditingController> get amountTextCon => _amountTextCon;
+
+  void splitPayment(context) {
+    _total > 0
+        ? Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Split(),
+          ))
+        : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: kDefaultGreen,
+            content: Text('Payment is already completed.'),
+          ));
+  }
+
+//setter for amountTextCon
+  set amountTextCon(List<TextEditingController> amountTextCon) {
+    _amountTextCon = amountTextCon;
+    notifyListeners();
+  }
+
+//increament for add person
+  void addPerson() {
+    if (selectedPerson >= 2 && selectedPerson <= 9) {
+      selectedPerson++;
+    }
+    notifyListeners();
+  }
+
+//decrement for decrease person
+  void decreasePerson() {
+    if (selectedPerson >= 3) {
+      selectedPerson--;
+    }
+    notifyListeners();
+  }
+
+//list ofr payment Option
+  List<String> _paymentOptionController = [];
+  List<String> get paymentOptionController => _paymentOptionController;
+
+  List<String> paymentOption = ['Cash', 'Card', 'Online', 'Credits'];
+
+  late String selesectpayment = paymentOption[0];
+
+//split pay method
+  splitPay(BuildContext context, SplitOptionModel splitOptionModel) {
+    if (total == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: kDefaultGreen,
+        content: Text("Payment Status, Payment is already completed."),
+      ));
+      print('object');
+    } else {
+      if (splitOptionModel.paidAmount == 0.0) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: kDefaultGreen,
+          content: Text("Payment Unsuccessfull, Please enter correct amount."),
+        ));
+      } else if (total < splitOptionModel.paidAmount!.toDouble()) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: kDefaultGreen,
+          content:
+              Text("Payment Unsuccessful, Please enter remaining amount only."),
+        ));
+      } else if ((total.toDouble() > 0 &&
+          total.toDouble() >= splitOptionModel.paidAmount!.toDouble())) {
+        total = total - splitOptionModel.paidAmount!.toDouble();
+        if (total == 0) {
+          for (int i = 0; i < amountTextCon.length; i++) {
+            amountTextCon[i].text = '';
+          }
+          // _cashReceived = 0;
+          // returnChange = 0;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => CompleteActionPayment(),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: kDefaultGreen,
+            content:
+                Text("Payment Successful, Payment is complete. Thank you!"),
+          ));
+        }
+      }
+    }
+    notifyListeners();
+  }
 }
 
 class TicektItem {
