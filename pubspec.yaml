@@ -23,11 +23,18 @@ dependencies:
   provider: ^5.0.0
   readmore: ^2.1.0
   shimmer: ^2.0.0
+  # hive database
+  hive: ^2.0.5
+  hive_flutter: ^1.1.0
+  path_provider: ^2.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   lint: ^1.7.2
+  # hive database generator
+  build_runner:
+  hive_generator:
 
 flutter:
   uses-material-design: true
