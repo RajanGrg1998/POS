@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pos/controller/customer_controller.dart';
 import 'package:pos/controller/settings_controller.dart';
+import 'package:pos/model/item.dart';
 import 'package:pos/screen/homepage/homepage.dart';
 import 'package:provider/provider.dart';
 import 'controller/client_controller.dart';
@@ -14,7 +16,12 @@ import 'controller/split_controller.dart';
 import 'controller/storesController.dart';
 import 'controller/ticket.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(ItemAdapter());
+
   runApp(const MyApp());
 }
 
