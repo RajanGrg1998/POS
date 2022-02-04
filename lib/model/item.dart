@@ -1,3 +1,7 @@
+import 'package:hive/hive.dart';
+part 'item.g.dart';
+
+@HiveType(typeId: 0)
 class Item {
   Item({
     this.isVeg = false,
@@ -17,20 +21,49 @@ class Item {
     this.sku,
   });
 
+  @HiveField(0)
   bool? isVeg;
+
+  @HiveField(1)
   bool? usesOfferPrice;
+
+  @HiveField(2)
   List<String>? addons;
+
+  @HiveField(3)
   List<String>? categories;
+
+  @HiveField(4)
   String id;
+
+  @HiveField(5)
   String name;
+
+  @HiveField(6)
   String? description;
+
+  @HiveField(7)
   dynamic price;
+
+  @HiveField(8)
   String? image;
+
+  @HiveField(9)
   bool? usesStocks;
+
+  @HiveField(10)
   int? offerPrice;
+
+  @HiveField(11)
   String? sku;
+
+  @HiveField(12)
   int? lowStock;
+
+  @HiveField(13)
   int? costPrice;
+
+  @HiveField(14)
   int? inStock;
 
   //****** */ not added *******
