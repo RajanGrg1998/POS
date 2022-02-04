@@ -64,7 +64,7 @@ class _UpdateItemScreenState extends State<UpdateItemScreen> {
                       .updateItem(widget.item.id, updateItem);
               final title = 'Done';
               final text = result.error == true
-                  ? (result.errorMessage ?? 'Am error ocurred')
+                  ? (result.errorMessage ?? 'No Internet Connection')
                   : 'Updated';
 
               showDialog(

@@ -49,7 +49,7 @@ class _AddItemState extends State<AddItem> {
                       .creareUser(createItem);
               final title = 'Done';
               final text = result.error == true
-                  ? (result.errorMessage ?? 'Am error ocurred')
+                  ? (result.errorMessage ?? 'No Internet Connection')
                   : 'Created';
 
               showDialog(

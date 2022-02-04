@@ -52,7 +52,7 @@ class AnimateItemList extends StatelessWidget {
         Provider.of<ItemsController>(context, listen: false).sum();
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
