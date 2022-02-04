@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pos/model/api_response.dart';
 import 'package:pos/model/create_item.dart';
 import 'package:pos/model/item.dart';
@@ -106,26 +110,60 @@ class ItemsController extends ChangeNotifier {
   //           error: true, errorMessage: 'An error ouccured'));
   // }
 
+  Box<Item>? box;
+
+  Future openBox() async {
+    if (kIsWeb) {
+      await Hive.initFlutter();
+    } else {
+      var dir = await getApplicationDocumentsDirectory();
+      Hive.init(dir.path);
+    }
+
+    box = await Hive.openBox<Item>('data');
+    return;
+  }
+
   Future<List<Item>> fetchItems() async {
-    if (!isItemLoaded) {
-      final response =
-          await http.get(Uri.parse('http://13.58.181.31/api/dalle/products'));
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body)['data'];
-        Iterable list = result['products'];
-        _items = list.map((model) => Item.fromJson(model)).toList();
-        isItemLoaded = true;
-      } else {
-        throw Exception('Failed to load Items');
+    await openBox();
+    try {
+      if (!isItemLoaded) {
+        final response = await http
+            .get(Uri.parse('https://api.khajaghar.ml/api/dalle/products'));
+        if (response.statusCode == 200) {
+          final result = jsonDecode(response.body)['data'];
+          Iterable list = result['products'];
+          _items = list.map((model) => Item.fromJson(model)).toList();
+          await putData(_items);
+          isItemLoaded = true;
+        } else {
+          throw Exception('Failed to load Items');
+        }
       }
+    } catch (socketException) {
+      print('no internet');
+    }
+
+    var myMap = box!.toMap().values.toList();
+    if (myMap.isEmpty) {
+      print('object');
+    } else {
+      _items = myMap;
     }
     return _items;
   }
 
+  Future putData(List<Item> data) async {
+    await box!.clear();
+    for (var d in data) {
+      box!.add(d);
+    }
+  }
+
   Future<List<Item>> addItems() async {
     if (!isItemLoaded) {
-      final response =
-          await http.get(Uri.parse('http://13.58.181.31/api/dalle/products'));
+      final response = await http
+          .get(Uri.parse('https://api.khajaghar.ml/api/dalle/products'));
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body)['data'];
         Iterable list = result['products'];
@@ -142,7 +180,7 @@ class ItemsController extends ChangeNotifier {
 
   Future<APIResponse<List<Item>>> getItems() {
     return http
-        .get(Uri.parse('http://13.58.181.31/api/dalle/products'))
+        .get(Uri.parse('https://api.khajaghar.ml/api/dalle/products'))
         .then((response) {
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body)['data'];
@@ -162,7 +200,7 @@ class ItemsController extends ChangeNotifier {
 
   Future<APIResponse<bool>> creareUser(CreateItem createItem) async {
     return http
-        .post(Uri.parse('http://13.58.181.31/api/dalle/products'),
+        .post(Uri.parse('https://api.khajaghar.ml/api/dalle/products'),
             headers: {
               'Content-type': 'application/json; charset=UTF-8',
             },
@@ -184,7 +222,7 @@ class ItemsController extends ChangeNotifier {
 
   Future<APIResponse<bool>> updateItem(String itemID, UpdateItem item) {
     return http
-        .put(Uri.parse('http://13.58.181.31/api/dalle/products/$itemID'),
+        .put(Uri.parse('https://api.khajaghar.ml/api/dalle/products/$itemID'),
             headers: {
               'Content-type': 'application/json; charset=UTF-8',
             },
@@ -202,7 +240,7 @@ class ItemsController extends ChangeNotifier {
 
   Future<APIResponse<bool>> deleteNote(String item) {
     return http.delete(
-      Uri.parse('http://13.58.181.31/api/dalle/products/$item'),
+      Uri.parse('https://api.khajaghar.ml/api/dalle/products/$item'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -238,7 +276,7 @@ class ItemsController extends ChangeNotifier {
 
     var length = await image!.length();
 
-    var uri = Uri.parse('http://13.58.181.31/api/dalle/products');
+    var uri = Uri.parse('https://api.khajaghar.ml/api/dalle/products');
 
     var reqeutest = http.MultipartRequest('POST', uri);
 
