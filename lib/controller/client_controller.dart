@@ -4,21 +4,40 @@ class ClientController extends ChangeNotifier {
   final clientController = TextEditingController();
   final List<ClientModel> creditorList = [
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+      name: "Chelsi Khetan.",
+      phone: "987556321",
+      email: 'chelsi.k@gmail.com',
+    ),
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+      name: "Angel Gurung",
+      phone: "987556321",
+      email: 'angel.g@gmail.com',
+    ),
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+      name: "Johannes Mike",
+      phone: "987556321",
+      email: 'mike.j@gmail.com',
+    ),
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+        name: "Hari Shrestha",
+        phone: "987556321",
+        email: 'shrestha.hari@gmail.com'),
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+        name: "Nina Dobrev", phone: "987556321", email: 'nina.d@gmai.com'),
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+        name: "Kirshna Paudel",
+        phone: "987556321",
+        email: 'kirshna.p@gmail.com'),
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+      name: "Bhim Gurung",
+      phone: "987556321",
+      email: 'bhim.g@gmail.com',
+    ),
     ClientModel(
-        name: "Chelsi K...", phone: "987556321", email: 'chelsi.k@g...'),
+      name: "Sita Magar",
+      phone: "987556321",
+      email: 'sita.m@gmail.com',
+    ),
   ];
 
   bool sort = false;
@@ -58,4 +77,8 @@ class ClientModel {
   String? email;
 
   ClientModel({this.name, this.phone, this.email});
+  @override
+  String toString() {
+    return '$name';
+  }
 }

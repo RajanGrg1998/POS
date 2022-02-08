@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/client_controller.dart';
+import 'package:pos/controller/notificationcontroller.dart';
 import 'package:pos/screen/notificationcreditors/creditor_list.dart';
 import 'package:pos/utils/constant.dart';
 
@@ -49,8 +50,15 @@ class AddClient extends StatelessWidget {
                     title:
                         'Send To- ${_clientcontroller.selectedUser.length} people',
                     onPressed: () {
-                      print(
-                          'Send to ${_clientcontroller.selectedUser.length} people');
+                      Provider.of<NotificationController>(context,
+                              listen: false)
+                          .showNotification(
+                              title: 'Notification',
+                              body: _clientcontroller.selectedUser.length == 1
+                                  ? 'Send To- ${_clientcontroller.selectedUser.first.toString()}'
+                                  : 'Send To- ${_clientcontroller.selectedUser.first.toString()} and ${_clientcontroller.selectedUser.length - 1} other people',
+                              payload: '');
+                      Navigator.pop(context);
                     },
                   ),
           )
@@ -85,13 +93,22 @@ class AddClient extends StatelessWidget {
                     },
                     cells: [
                       DataCell(
-                        Text(client.name!),
+                        Text(
+                          client.name!,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       DataCell(
-                        Text(client.phone!),
+                        Text(
+                          client.phone!,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       DataCell(
-                        Text(client.email!),
+                        Text(
+                          client.email!,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

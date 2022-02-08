@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/addtextfield.dart';
 import 'package:pos/controller/items_controller.dart';
-import 'package:pos/controller/split_controller.dart';
 import 'package:pos/screen/split/splitoption.dart';
 import 'package:pos/utils/constant.dart';
 import 'package:provider/provider.dart';
