@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NotificationController extends ChangeNotifier {
@@ -26,6 +27,35 @@ class NotificationController extends ChangeNotifier {
     notification.forEach((notification) => notification.value = value);
     notifyListeners();
   }
+
+//local notification
+  static final _notification = FlutterLocalNotificationsPlugin();
+
+  static Future _notificationDetails() async {
+    return NotificationDetails(
+        android: AndroidNotificationDetails(
+          'channelId',
+          'channelName',
+          channelDescription: '',
+          importance: Importance.max,
+          icon: "@mipmap/ic_launcher",
+        ),
+        iOS: IOSNotificationDetails());
+  }
+
+  Future showNotification({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payload,
+  }) async =>
+      _notification.show(
+        id,
+        title,
+        body,
+        await _notificationDetails(),
+        payload: payload,
+      );
 
 // uploading image
 
